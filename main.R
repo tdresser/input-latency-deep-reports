@@ -20,7 +20,7 @@ all_data <- get_data("all_data") %>%
 non_other_count <- 20
 
 top_data <- all_data %>%
-  slice(1:non_other_count - 1)
+  slice(1:min(n(), non_other_count - 1))
 
 other_data <- all_data %>% 
   slice(non_other_count:n()) %>%
@@ -30,9 +30,15 @@ other_data <- all_data %>%
 all_data <- bind_rows(top_data, other_data)
 
 all_data$type <- as.factor(all_data$type)
-all_data$method <- as.factor(all_data$method)
 
-ggplot(top_data, aes(fill=method, y=duration, x=type)) +
+# TODO - summarize better
+methods_by_volume <- all_data %>% 
+  filter(type == "touchmove queueing")
+
+all_data %>% filter(type == "touchmove queueing") %>% select(method)
+all_data$method <- factor(all_data$method, levels=rev(methods_by_volume$method))
+
+ggplot(all_data, aes(fill=method, y=duration, x=type)) +
   geom_col() +
   scale_fill_manual(values=breakdown_colors)
   
