@@ -1,3 +1,0 @@
-[submodule "r_helpers"]
-	path = r_helpers
-	url = git@github.com:tdresser/r_helpers.git
