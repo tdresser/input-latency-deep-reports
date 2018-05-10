@@ -1,0 +1,36 @@
+---
+title: "Input Latency Deep Report Analysis"
+author: "tdresser@chromium.org"
+date: "May 9, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache=FALSE)
+source("main.R")
+```
+
+lanwei@ gathered data from 2,319 deep reports. These are traces from employees during regular use, sampling for the first 30 seconds after each 
+navigation.
+
+We examined the time spent when touch start and touch move events were queued on the main thread, or being handled on the main thread.
+
+By "queueing time", we're referring to the time when the event has reached the main thread, but the main thread is busy doing other work.
+
+By "handling time", we're referring to the time when event handlers are actively executing.
+
+## Main Thread Input Latency Contributors
+
+This chart shows the average contributions for the top 20 methods by contribution to latency.
+The "worst" rows show the average contributions for the worst 10% of cases.
+
+```{r fig.width = 13, cache=FALSE}
+myplotly(all_data_plot)
+```
+
+This chart shows the same data as above, but normalized to make it easier to compare the proportion of time spent in each method.
+It's interesting that the proportion of time spent per method is extremely similar in the "worst" cases and the cases including all data.
+
+```{r fig.width = 13, cache=FALSE}
+myplotly(normalized_data_plot)
+```
